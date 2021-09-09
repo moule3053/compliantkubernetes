@@ -10,5 +10,3 @@ jobs:
     - uses: actions/setup-python@v2
     - uses: pre-commit/action@v2.0.0
     - uses: codespell-project/actions-codespell@master
-    - name: Test mkdocs build
-      uses: jnanadarshan/mkdocs-build-action@v0.24
