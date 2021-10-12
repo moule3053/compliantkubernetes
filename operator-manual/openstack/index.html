@@ -1,0 +1,1805 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Compliant Kubernetes is a Kubernetes distribution that reduces the burden for complying with HIPAA, Swedish Healthcare (Patientdatalagen), GDPR and ISO 27001.">
+      
+      
+      
+        <meta name="author" content="Elastisys AB">
+      
+      
+        <link rel="canonical" href="https://compliantkubernetes.io/operator-manual/openstack/">
+      
+      <link rel="icon" href="../../img/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.3.3">
+    
+    
+      
+        <title>On Openstack - Compliant Kubernetes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.5143246d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.3f5d1f46.min.css">
+        
+      
+    
+    
+    
+      
+    
+    
+    
+    
+<!-- Matomo -->
+<script>var _paq = window._paq = window._paq || [];
+_paq.push(['disableCookies']);
+_paq.push(['trackAllContentImpressions']);_paq.push(['trackPageView']);_paq.push(['enableLinkTracking']);_paq.push(['alwaysUseSendBeacon']);_paq.push(['setTrackerUrl', "\/\/elastisys.com\/wp-content\/plugins\/matomo\/app\/matomo.php"]);_paq.push(['setSiteId', '2']);var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+g.type='text/javascript'; g.async=true; g.src="\/\/elastisys.com\/wp-content\/uploads\/matomo\/matomo.js"; s.parentNode.insertBefore(g,s);
+</script>
+<!-- End Matomo Code -->
+
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    <script>function __prefix(e){return new URL("../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#compliant-kubernetes-on-openstack" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Compliant Kubernetes" class="md-header__button md-logo" aria-label="Compliant Kubernetes" data-md-component="logo">
+      
+  <img src="../../img/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Compliant Kubernetes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              On Openstack
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/elastisys/compliantkubernetes/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Compliant Kubernetes" class="md-nav__button md-logo" aria-label="Compliant Kubernetes" data-md-component="logo">
+      
+  <img src="../../img/logo.png" alt="logo">
+
+    </a>
+    Compliant Kubernetes
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/elastisys/compliantkubernetes/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compliance/" class="md-nav__link">
+        Compliance Basics
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        Architecture
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../benefits/" class="md-nav__link">
+        Exploring Benefits
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          User Guide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="User Guide" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          User Guide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/getting-started/" class="md-nav__link">
+        Getting Started
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/registry/" class="md-nav__link">
+        Container registry
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/kubernetes-api/" class="md-nav__link">
+        Kubernetes API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/logs/" class="md-nav__link">
+        Logs
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/metrics/" class="md-nav__link">
+        Metrics
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/alerts/" class="md-nav__link">
+        Alerts
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/backup/" class="md-nav__link">
+        Backups
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/ci-cd/" class="md-nav__link">
+        CI/CD
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/demarcation/" class="md-nav__link">
+        Can I?
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          CISO Guide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="CISO Guide" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          CISO Guide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ciso-guide/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ciso-guide/backup/" class="md-nav__link">
+        Backup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ciso-guide/cryptography/" class="md-nav__link">
+        Cryptography
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ciso-guide/intrusion-detection/" class="md-nav__link">
+        Intrusion Detection
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ciso-guide/policy-as-code/" class="md-nav__link">
+        Policy-as-Code
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ciso-guide/network-security/" class="md-nav__link">
+        Network Security
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ciso-guide/kubernetes-status/" class="md-nav__link">
+        Kubernetes Status
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ciso-guide/vulnerability/" class="md-nav__link">
+        Vulnerability Management
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ciso-guide/log-review/" class="md-nav__link">
+        Log Review
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7">
+          Administrator Manual
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Administrator Manual" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Administrator Manual
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        Getting Started
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7_3" type="checkbox" id="__nav_7_3" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7_3">
+          Creating/Destroying/Upgrading a Cluster
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Creating/Destroying/Upgrading a Cluster" data-md-level="2">
+        <label class="md-nav__title" for="__nav_7_3">
+          <span class="md-nav__icon md-icon"></span>
+          Creating/Destroying/Upgrading a Cluster
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aws/" class="md-nav__link">
+        On AWS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azure/" class="md-nav__link">
+        On Azure
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exoscale/" class="md-nav__link">
+        On Exoscale
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gcp/" class="md-nav__link">
+        On GCP
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          On Openstack
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        On Openstack
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#initialize-configuration-folder" class="md-nav__link">
+    Initialize configuration folder
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#infrastructure-setup-using-terraform" class="md-nav__link">
+    Infrastructure setup using Terraform
+  </a>
+  
+    <nav class="md-nav" aria-label="Infrastructure setup using Terraform">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#infrastructure-guidance" class="md-nav__link">
+    Infrastructure guidance
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expose-openstack-credentials-to-terraform" class="md-nav__link">
+    Expose Openstack credentials to Terraform
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#initialize-and-apply-terraform" class="md-nav__link">
+    Initialize and apply Terraform
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#install-kubernetes-using-kubespray" class="md-nav__link">
+    Install Kubernetes using Kubespray
+  </a>
+  
+    <nav class="md-nav" aria-label="Install Kubernetes using Kubespray">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setting-up-kubespray-variables" class="md-nav__link">
+    Setting up Kubespray variables
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-kubespray" class="md-nav__link">
+    Run Kubespray
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-access-to-the-kubernetes-api" class="md-nav__link">
+    Test access to the Kubernetes API
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare-for-compliant-kubernetes-apps" class="md-nav__link">
+    Prepare for Compliant Kubernetes Apps
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cleanup" class="md-nav__link">
+    Cleanup
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ovh-managed-kubernetes/" class="md-nav__link">
+        On OVH Managed Kubernetes
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../eksd/" class="md-nav__link">
+        On EKS-D
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../clean-up/" class="md-nav__link">
+        Remove Compliant Kubernetes Apps
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../qa/" class="md-nav__link">
+        QA
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7_5" type="checkbox" id="__nav_7_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7_5">
+          Configuring a Cluster
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Configuring a Cluster" data-md-level="2">
+        <label class="md-nav__title" for="__nav_7_5">
+          <span class="md-nav__icon md-icon"></span>
+          Configuring a Cluster
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cluster-sizing/" class="md-nav__link">
+        Sizing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ingress/" class="md-nav__link">
+        Ingress
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../access-control/" class="md-nav__link">
+        Access Control
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../disaster-recovery/" class="md-nav__link">
+        Disaster Recovery
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../break-glass/" class="md-nav__link">
+        Breaking the Glass
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credentials/" class="md-nav__link">
+        Use of Credentials
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        Troubleshooting
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8">
+          Contributor Guide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Contributor Guide" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Contributor Guide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributor-guide/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/" class="md-nav__link">
+        Architectural Decision Log
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-radar/" class="md-nav__link">
+        Tech Radar
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vocabulary/" class="md-nav__link">
+        Vocabulary
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        FAQ
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-notes/" class="md-nav__link">
+        Release Notes
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roadmap/" class="md-nav__link">
+        Roadmap
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://elastisys.com/" class="md-nav__link">
+        Support ⧉
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://elastisys.com/blog/" class="md-nav__link">
+        Blog ⧉
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#initialize-configuration-folder" class="md-nav__link">
+    Initialize configuration folder
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#infrastructure-setup-using-terraform" class="md-nav__link">
+    Infrastructure setup using Terraform
+  </a>
+  
+    <nav class="md-nav" aria-label="Infrastructure setup using Terraform">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#infrastructure-guidance" class="md-nav__link">
+    Infrastructure guidance
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expose-openstack-credentials-to-terraform" class="md-nav__link">
+    Expose Openstack credentials to Terraform
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#initialize-and-apply-terraform" class="md-nav__link">
+    Initialize and apply Terraform
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#install-kubernetes-using-kubespray" class="md-nav__link">
+    Install Kubernetes using Kubespray
+  </a>
+  
+    <nav class="md-nav" aria-label="Install Kubernetes using Kubespray">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setting-up-kubespray-variables" class="md-nav__link">
+    Setting up Kubespray variables
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-kubespray" class="md-nav__link">
+    Run Kubespray
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-access-to-the-kubernetes-api" class="md-nav__link">
+    Test access to the Kubernetes API
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prepare-for-compliant-kubernetes-apps" class="md-nav__link">
+    Prepare for Compliant Kubernetes Apps
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cleanup" class="md-nav__link">
+    Cleanup
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/elastisys/compliantkubernetes/edit/main/docs/operator-manual/openstack.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 id="compliant-kubernetes-on-openstack">Compliant Kubernetes on Openstack</h1>
+<p>This document contains instructions on how to set up a Compliant Kubernetes environment (consisting of a service cluster and one or more workload clusters) on Openstack.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This guide is written for compliantkubernetes-apps <a href="https://github.com/elastisys/compliantkubernetes-apps/tree/v0.13.0">v0.13.0</a></p>
+</div>
+<p>TODO: The document is split into two parts:</p>
+<ul>
+<li>
+<p>Cluster setup (setting up infrastructure and the Kubernetes clusters).
+  We will be using the <a href="https://github.com/kubernetes-sigs/kubespray/tree/master/contrib/terraform/openstack">Terraform module for Openstack that can be found in the Kubespray repository</a>.
+  Please refer to it if you need more details about this part of the setup.</p>
+</li>
+<li>
+<p>Apps setup (including information about limitations)</p>
+</li>
+</ul>
+<p>Before starting, make sure you have <a href="../getting-started/">all necessary tools</a>. In addition to these general tools, you will also need:</p>
+<ul>
+<li><a href="https://github.com/kubernetes-sigs/kubespray/tree/master/contrib/terraform/openstack#openstack-access-and-credentials">Openstack credentials</a> (either using <code>openrc</code> or the <code>clouds.yaml</code> configuration file) for setting up the infrastructure.</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although recommended OpenStack authentication method is <code>clouds.yaml</code> it is more convenient to use the <code>openrc</code> method with compliant kubernetes as it works both with kubespray and terraform. If you are using the <code>clouds.yaml</code> method, at the moment, kubespray will still expect you to set a few environment variables.</p>
+</div>
+<h2 id="initialize-configuration-folder">Initialize configuration folder</h2>
+<p>Choose names for your service cluster and workload cluster(s):</p>
+<div class="highlight"><pre><span></span><code><span class="nv">SERVICE_CLUSTER</span><span class="o">=</span><span class="s2">&quot;testsc&quot;</span>
+<span class="nv">WORKLOAD_CLUSTERS</span><span class="o">=(</span> <span class="s2">&quot;testwc0&quot;</span> <span class="s2">&quot;testwc1&quot;</span> <span class="o">)</span>
+</code></pre></div>
+<p>Start by initializing a Compliant Kubernetes environment using Compliant Kubernetes Kubespray.
+All of this is done from the root of the <code>compliantkubernetes-kubespray</code> repository.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">CK8S_CONFIG_PATH</span><span class="o">=</span>~/.ck8s/&lt;environment-name&gt;
+<span class="nb">export</span> <span class="nv">SOPS_FP</span><span class="o">=</span>&lt;PGP-fingerprint&gt;
+
+<span class="k">for</span> CLUSTER <span class="k">in</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">SERVICE_CLUSTER</span><span class="si">}</span><span class="s2">&quot;</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">WORKLOAD_CLUSTERS</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span> <span class="k">do</span>
+  ./bin/ck8s-kubespray init <span class="s2">&quot;</span><span class="si">${</span><span class="nv">CLUSTER</span><span class="si">}</span><span class="s2">&quot;</span> openstack <span class="s2">&quot;</span><span class="si">${</span><span class="nv">SOPS_FP</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">done</span>
+</code></pre></div>
+<h2 id="infrastructure-setup-using-terraform">Infrastructure setup using Terraform</h2>
+<p>Configure Terraform by creating a <code>cluster.tfvars</code> file for each cluster.
+The available options can be seen in <code>kubespray/contrib/terraform/openstack/variables.tf</code>.
+There is a sample file that can be copied to get something to start from.</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> CLUSTER <span class="k">in</span> <span class="si">${</span><span class="nv">SERVICE_CLUSTER</span><span class="si">}</span> <span class="si">${</span><span class="nv">WORKLOAD_CLUSTERS</span><span class="p">[@]</span><span class="si">}</span><span class="p">;</span> <span class="k">do</span>
+  cp kubespray/contrib/terraform/openstack/sample-inventory/cluster.tfvars <span class="s2">&quot;</span><span class="si">${</span><span class="nv">CK8S_CONFIG_PATH</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">CLUSTER</span><span class="si">}</span><span class="s2">-config/cluster.tfvars&quot;</span>
+<span class="k">done</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You really <em>must</em> edit the values in these files.
+There is no way to set sane defaults for what flavor to use, what availability zones or networks are available across providers.
+In the section below some guidance and samples are provided but remember that they might be useless to you depending on your needs and setup.</p>
+</div>
+<h3 id="infrastructure-guidance">Infrastructure guidance</h3>
+<p>We recommend you to have at least three worker nodes with 4 cores and 8 GB memory each, and we recommend you to have at least 2 cores and 4 GB for your control plane nodes.</p>
+<p>Below is example <code>cluster.tfvars</code> for a few select openstack providers.
+The examples are copy-pastable, but you might want to change <code>cluster_name</code> and <code>network_name</code> (if neutron is used!).</p>
+<div class="tabbed-set" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">Citycloud Kna1</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code># your Kubernetes cluster name here
+cluster_name = &quot;your-cluster-name&quot;
+
+# image to use for bastion, masters, standalone etcd instances, and nodes
+image = &quot;Ubuntu 20.04 Focal Fossa 20200423&quot;
+
+# 0|1 bastion nodes
+number_of_bastions = 0
+
+# standalone etcds
+number_of_etcd = 0
+
+# masters
+number_of_k8s_masters = 1
+number_of_k8s_masters_no_etcd = 0
+number_of_k8s_masters_no_floating_ip = 0
+number_of_k8s_masters_no_floating_ip_no_etcd = 0
+flavor_k8s_master = &quot;96c7903e-32f0-421d-b6a2-a45c97b15665&quot;
+
+# nodes
+number_of_k8s_nodes = 3
+number_of_k8s_nodes_no_floating_ip = 0
+flavor_k8s_node = &quot;572a3b2e-6329-4053-b872-aecb1e70d8a6&quot;
+
+# networking
+# ssh access to nodes
+k8s_allowed_remote_ips = [&quot;0.0.0.0/0&quot;]
+worker_allowed_ports = [
+  { # Node ports
+    &quot;protocol&quot;         = &quot;tcp&quot;
+    &quot;port_range_min&quot;   = 30000
+    &quot;port_range_max&quot;   = 32767
+    &quot;remote_ip_prefix&quot; = &quot;0.0.0.0/0&quot;
+  },
+  { # HTTP
+    &quot;protocol&quot;         = &quot;tcp&quot;
+    &quot;port_range_min&quot;   = 80
+    &quot;port_range_max&quot;   = 80
+    &quot;remote_ip_prefix&quot; = &quot;0.0.0.0/0&quot;
+  },
+  { # HTTPS
+    &quot;protocol&quot;         = &quot;tcp&quot;
+    &quot;port_range_min&quot;   = 443
+    &quot;port_range_max&quot;   = 443
+    &quot;remote_ip_prefix&quot; = &quot;0.0.0.0/0&quot;
+  }
+]
+network_name = &quot;name-of-your-network&quot;
+external_net = &quot;fba95253-5543-4078-b793-e2de58c31378&quot;
+floatingip_pool = &quot;ext-net&quot;
+use_access_ip = 0
+
+use_server_groups = true
+</code></pre></div>
+</div>
+<input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><label for="__tabbed_1_2">Safespring sto1</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code># your Kubernetes cluster name here
+cluster_name = &quot;your-cluster-name&quot;
+
+# image to use for bastion, masters, standalone etcd instances, and nodes
+image = &quot;ubuntu-20.04&quot;
+
+# 0|1 bastion nodes
+number_of_bastions = 0
+
+use_neutron = 0
+
+# standalone etcds
+number_of_etcd = 0
+
+# masters
+number_of_k8s_masters = 0
+number_of_k8s_masters_no_etcd = 0
+number_of_k8s_masters_no_floating_ip = 1
+number_of_k8s_masters_no_floating_ip_no_etcd = 0
+flavor_k8s_master = &quot;8a707999-0bce-4f2f-8243-b4253ba7c473&quot;
+
+# nodes
+number_of_k8s_nodes = 0
+number_of_k8s_nodes_no_floating_ip = 3
+flavor_k8s_node = &quot;5b40af67-9d11-45ed-a44f-e876766160a5&quot;
+
+# networking
+# ssh access to nodes
+k8s_allowed_remote_ips = [&quot;0.0.0.0/0&quot;]
+worker_allowed_ports = [
+  { # Node ports
+    &quot;protocol&quot;         = &quot;tcp&quot;
+    &quot;port_range_min&quot;   = 30000
+    &quot;port_range_max&quot;   = 32767
+    &quot;remote_ip_prefix&quot; = &quot;0.0.0.0/0&quot;
+  },
+  { # HTTP
+    &quot;protocol&quot;         = &quot;tcp&quot;
+    &quot;port_range_min&quot;   = 80
+    &quot;port_range_max&quot;   = 80
+    &quot;remote_ip_prefix&quot; = &quot;0.0.0.0/0&quot;
+  },
+  { # HTTPS
+    &quot;protocol&quot;         = &quot;tcp&quot;
+    &quot;port_range_min&quot;   = 443
+    &quot;port_range_max&quot;   = 443
+    &quot;remote_ip_prefix&quot; = &quot;0.0.0.0/0&quot;
+  }
+]
+external_net = &quot;b19680b3-c00e-40f0-ad77-4448e81ae226&quot;
+use_access_ip = 1
+network_name = &quot;public&quot;
+
+use_server_groups = true
+</code></pre></div>
+</div>
+</div>
+<h3 id="expose-openstack-credentials-to-terraform">Expose Openstack credentials to Terraform</h3>
+<p>Terraform will need access to Openstack credentials in order to create the infrastructure.
+More details can be found <a href="https://github.com/kubernetes-sigs/kubespray/tree/master/contrib/terraform/openstack#openstack-access-and-credentials">here</a>.
+We will be using the declarative option with the <code>clouds.yaml</code> file.
+Since this file can contain credentials for multiple environments, we specify the name of the one we want to use in the environment variable <code>OS_CLOUD</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">OS_CLOUD</span><span class="o">=</span>&lt;name-of-openstack-cloud-environment&gt;
+</code></pre></div>
+<h3 id="initialize-and-apply-terraform">Initialize and apply Terraform</h3>
+<div class="highlight"><pre><span></span><code><span class="nv">MODULE_PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">/kubespray/contrib/terraform/openstack&quot;</span>
+
+<span class="nb">pushd</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">MODULE_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">for</span> CLUSTER <span class="k">in</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">SERVICE_CLUSTER</span><span class="si">}</span><span class="s2">&quot;</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">WORKLOAD_CLUSTERS</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span> <span class="k">do</span>
+  terraform init
+  terraform apply -var-file<span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CK8S_CONFIG_PATH</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">CLUSTER</span><span class="si">}</span><span class="s2">-config/cluster.tfvars&quot;</span> -state<span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CK8S_CONFIG_PATH</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">CLUSTER</span><span class="si">}</span><span class="s2">-config/terraform.tfstate&quot;</span>
+<span class="k">done</span>
+<span class="nb">popd</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The above will not work well if you are using a bastion host.
+This is due to <a href="https://github.com/kubernetes-sigs/kubespray/blob/master/contrib/terraform/openstack/modules/compute/main.tf#L207">some hard coded paths</a>.
+To work around it, you may link the <code>kubespray/contrib</code> folder to the correct relative path, or make sure your <code>CK8S_CONFIG_PATH</code> is already at a proper place relative to the same.</p>
+</div>
+<h2 id="install-kubernetes-using-kubespray">Install Kubernetes using Kubespray</h2>
+<p>Before we can run Kubespray, we will need to go through the relevant variables.
+Additionally we will need to expose some credentials so that Kubespray can set up cloud provider integration.</p>
+<p>You will need to change at least one value: <code>kube_oidc_url</code> in <code>group_vars/k8s_cluster/ck8s-k8s_cluster.yaml</code>, normally this should be set to <code>https://dex.BASE_DOMAIN</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you have <code>use_access_ip = 0</code> in <code>cluster.tfvars</code>, you should add the public ip address of the master nodes to the variable <code>supplementary_addresses_in_ssl_keys = ["&lt;master-0-ip-address&gt;",...]</code> somewhere under <code>group_vars/</code>.</p>
+</div>
+<p>For cloud provider integration, you have a few options <a href="https://github.com/kubernetes-sigs/kubespray/blob/master/docs/openstack.md#the-external-cloud-provider">as described here</a>.
+We will be going with the external cloud provider and simply source the Openstack credentials.
+See below for how to modify the variables that need to be modified.</p>
+<h3 id="setting-up-kubespray-variables">Setting up Kubespray variables</h3>
+<p>In <code>${CK8S_CONFIG_PATH}/$CLUSTER-config/group_vars/k8s_cluster/ck8s-k8s-cluster-openstack.yaml</code>, the default variables should look like this:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">etcd_kubeadm_enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="nt">cloud_provider</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">external</span>
+<span class="nt">external_cloud_provider</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">openstack</span>
+<span class="nt">calico_mtu</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1480</span>
+
+<span class="nt">external_openstack_cloud_controller_extra_args</span><span class="p">:</span>
+  <span class="c1"># Must be different for every cluster in the same openstack project</span>
+  <span class="nt">cluster-name</span><span class="p">:</span> <span class="s">&quot;set-me&quot;</span>
+
+<span class="nt">cinder_csi_enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">persistent_volumes_enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">expand_persistent_volumes</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">openstack_blockstorage_ignore_volume_az</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="nt">storage_classes</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cinder-csi</span>
+    <span class="nt">is_default</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">parameters</span><span class="p">:</span>
+      <span class="nt">allowVolumeExpansion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="nt">availability</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nova</span>
+</code></pre></div>
+<p><code>cluster-name</code> should be set to a name that is unique in the Openstack project you're deploying your clusters in. If you don't have any other clusters in the project, just make sure that the service cluster and workload clusters have different names.</p>
+<p>Cinder CSI is enabled by default along with the configuration options to enable persistent volumes and the expansion of these volumes. It is also set to ignore the volume availability zone to allow volumes to attach to nodes in different or mismatching zones. The default works well with both CityCloud and SafeSpring.</p>
+<p>If you want to set up LBaaS in your cluster, you can add the following config:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">external_openstack_lbaas_create_monitor</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="nt">external_openstack_lbaas_monitor_delay</span><span class="p">:</span> <span class="s">&quot;1m&quot;</span>
+<span class="nt">external_openstack_lbaas_monitor_timeout</span><span class="p">:</span> <span class="s">&quot;30s&quot;</span>
+<span class="nt">external_openstack_lbaas_monitor_max_retries</span><span class="p">:</span> <span class="s">&quot;3&quot;</span>
+<span class="nt">external_openstack_lbaas_provider</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">octavia</span>
+<span class="nt">external_openstack_lbaas_use_octavia</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="c1"># external_openstack_lbaas_network_id: &quot;Neutron network ID to create LBaaS VIP&quot;</span>
+<span class="nt">external_openstack_lbaas_subnet_id</span><span class="p">:</span> <span class="s">&quot;Neutron</span><span class="nv"> </span><span class="s">subnet</span><span class="nv"> </span><span class="s">ID</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">create</span><span class="nv"> </span><span class="s">LBaaS</span><span class="nv"> </span><span class="s">VIP&quot;</span>
+<span class="nt">external_openstack_lbaas_floating_network_id</span><span class="p">:</span> <span class="s">&quot;Neutron</span><span class="nv"> </span><span class="s">network</span><span class="nv"> </span><span class="s">ID</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">get</span><span class="nv"> </span><span class="s">floating</span><span class="nv"> </span><span class="s">IP</span><span class="nv"> </span><span class="s">from&quot;</span>
+<span class="c1"># external_openstack_lbaas_floating_subnet_id: &quot;Neutron subnet ID to get floating IP from&quot;</span>
+<span class="nt">external_openstack_lbaas_method</span><span class="p">:</span> <span class="s">&quot;ROUND_ROBIN&quot;</span>
+<span class="nt">external_openstack_lbaas_manage_security_groups</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="nt">external_openstack_lbaas_internal_lb</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+</code></pre></div>
+<p>The <code>network_id</code> and <code>subnet_id</code> variables need to be set by you, depending on whether or not you used floating IP. <code>network_id</code> should match the <code>external_net</code> variable in your Terraform variables, whereas the <code>subnet_id</code> should match the subnet ID that Terraform outputs after it is applied.</p>
+<p>Additionally, when you later set up <code>compliantkubernetes-apps</code> in your cluster, you should set <code>ingressNginx.controller.service.enabled</code> to <code>true</code> and <code>ingressNginx.controller.service.type</code> to <code>LoadBalancer</code> in both your <code>sc-config.yaml</code> and <code>wc-config.yaml</code>. Use the IP of the <code>ingress-nginx-controller</code> service in your cluster when you set up your DNS.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>At this point if the cluster is running on Safespring and you are using <code>kubespray v2.17.0+</code> it is possible to create an application credential.
+Which will give the cluster its own set of credentials instead of using your own.</p>
+<p>To create a set of credentials use the following command:
+<code>openstack application credential create &lt;name&gt;</code></p>
+<p>And set the following environment variables</p>
+<div class="highlight"><pre><span></span><code><span class="go">export OS_APPLICATION_CREDENTIAL_NAME: &lt;name&gt;</span>
+<span class="go">export OS_APPLICATION_CREDENTIAL_ID: &lt;project_id&gt;</span>
+<span class="go">export OS_APPLICATION_CREDENTIAL_SECRET: &lt;secret&gt;</span>
+</code></pre></div>
+</div>
+<h3 id="run-kubespray">Run Kubespray</h3>
+<p>Copy the script for generating dynamic ansible inventories:</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> CLUSTER <span class="k">in</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">SERVICE_CLUSTER</span><span class="si">}</span><span class="s2">&quot;</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">WORKLOAD_CLUSTERS</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span> <span class="k">do</span>
+  cp kubespray/contrib/terraform/terraform.py <span class="s2">&quot;</span><span class="si">${</span><span class="nv">CK8S_CONFIG_PATH</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">CLUSTER</span><span class="si">}</span><span class="s2">-config/inventory.ini&quot;</span>
+  chmod +x <span class="s2">&quot;</span><span class="si">${</span><span class="nv">CK8S_CONFIG_PATH</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">CLUSTER</span><span class="si">}</span><span class="s2">-config/inventory.ini&quot;</span>
+<span class="k">done</span>
+</code></pre></div>
+<p>Now it is time to run the Kubespray playbook!</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> CLUSTER <span class="k">in</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">SERVICE_CLUSTER</span><span class="si">}</span><span class="s2">&quot;</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">WORKLOAD_CLUSTERS</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span> <span class="k">do</span>
+  ./bin/ck8s-kubespray apply <span class="s2">&quot;</span><span class="si">${</span><span class="nv">CLUSTER</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">done</span>
+</code></pre></div>
+<h3 id="test-access-to-the-kubernetes-api">Test access to the Kubernetes API</h3>
+<p>You should now have an encrypted kubeconfig file for each cluster under <code>$CK8S_CONFIG_PATH/.state</code>.
+Check that they work like this:</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> CLUSTER <span class="k">in</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">SERVICE_CLUSTER</span><span class="si">}</span><span class="s2">&quot;</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">WORKLOAD_CLUSTERS</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span> <span class="k">do</span>
+  sops exec-file <span class="s2">&quot;</span><span class="si">${</span><span class="nv">CK8S_CONFIG_PATH</span><span class="si">}</span><span class="s2">/.state/kube_config_</span><span class="si">${</span><span class="nv">CLUSTER</span><span class="si">}</span><span class="s2">.yaml&quot;</span> <span class="s2">&quot;kubectl --kubeconfig {} cluster-info&quot;</span>
+<span class="k">done</span>
+</code></pre></div>
+<p>The output should be similar to this.</p>
+<div class="highlight"><pre><span></span><code>Kubernetes control plane is running at https://&lt;public-ip&gt;:6443
+
+To further debug and diagnose cluster problems, use &#39;kubectl cluster-info dump&#39;.
+Kubernetes control plane is running at https://&lt;public-ip&gt;:6443
+
+To further debug and diagnose cluster problems, use &#39;kubectl cluster-info dump&#39;.
+</code></pre></div>
+<h2 id="prepare-for-compliant-kubernetes-apps">Prepare for Compliant Kubernetes Apps</h2>
+<p>To make the kubeconfig files work with Compliant Kubernetes Apps, you will need to rename or copy them, since Compliant Kubernetes Apps currently only support clusters named <code>sc</code> and <code>wc</code>.
+If you have multiple workload clusters, you can make this work by setting <code>CK8S_CONFIG_PATH</code> to each <code>$CK8S_CONFIG_PATH/$CLUSTER-config</code> in turn.
+I.e. <code>CK8S_CONFIG_PATH</code> will be different for compliantkubernetes-kubespray and compliantkubernetes-apps.</p>
+<div class="highlight"><pre><span></span><code># In compliantkubernetes-kubespray
+CK8S_CONFIG_PATH=~/.ck8s/&lt;environment-name&gt;
+# In compliantkubernetes-apps (one config path per workload cluster)
+CK8S_CONFIG_PATH=~/.ck8s/&lt;environment-name&gt;/&lt;prefix&gt;-config
+</code></pre></div>
+<p>Copy the kubeconfig files to a path that Apps can find.</p>
+<p><strong>Option 1</strong> - A single workload cluster:</p>
+<div class="highlight"><pre><span></span><code>cp <span class="s2">&quot;</span><span class="si">${</span><span class="nv">CK8S_CONFIG_PATH</span><span class="si">}</span><span class="s2">/.state/kube_config_</span><span class="si">${</span><span class="nv">SERVICE_CLUSTER</span><span class="si">}</span><span class="s2">.yaml&quot;</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">CK8S_CONFIG_PATH</span><span class="si">}</span><span class="s2">/.state/kube_config_sc.yaml&quot;</span>
+cp <span class="s2">&quot;</span><span class="si">${</span><span class="nv">CK8S_CONFIG_PATH</span><span class="si">}</span><span class="s2">/.state/kube_config_</span><span class="si">${</span><span class="nv">WORKLOAD_CLUSTERS</span><span class="p">[@]</span><span class="si">}</span><span class="s2">.yaml&quot;</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">CK8S_CONFIG_PATH</span><span class="si">}</span><span class="s2">/.state/kube_config_wc.yaml&quot;</span>
+</code></pre></div>
+<p>You can now use the same <code>CK8S_CONFIG_PATH</code> for Apps as for compliantkubernetes-kubespray.</p>
+<p><strong>Option 2</strong> - A multiple workload cluster:</p>
+<div class="highlight"><pre><span></span><code>mkdir -p <span class="s2">&quot;</span><span class="si">${</span><span class="nv">CK8S_CONFIG_PATH</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">SERVICE_CLUSTER</span><span class="si">}</span><span class="s2">-config/.state&quot;</span>
+cp <span class="s2">&quot;</span><span class="si">${</span><span class="nv">CK8S_CONFIG_PATH</span><span class="si">}</span><span class="s2">/.state/kube_config_</span><span class="si">${</span><span class="nv">SERVICE_CLUSTER</span><span class="si">}</span><span class="s2">.yaml&quot;</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">CK8S_CONFIG_PATH</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">SERVICE_CLUSTER</span><span class="si">}</span><span class="s2">-config/.state/kube_config_sc.yaml&quot;</span>
+<span class="k">for</span> CLUSTER <span class="k">in</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">WORKLOAD_CLUSTERS</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span> <span class="k">do</span>
+  mkdir -p <span class="s2">&quot;</span><span class="si">${</span><span class="nv">CK8S_CONFIG_PATH</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">CLUSTER</span><span class="si">}</span><span class="s2">-config/.state&quot;</span>
+  cp <span class="s2">&quot;</span><span class="si">${</span><span class="nv">CK8S_CONFIG_PATH</span><span class="si">}</span><span class="s2">/.state/kube_config_</span><span class="si">${</span><span class="nv">CLUSTERS</span><span class="si">}</span><span class="s2">.yaml&quot;</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">CK8S_CONFIG_PATH</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">CLUSTER</span><span class="si">}</span><span class="s2">-config/.state/kube_config_wc.yaml&quot;</span>
+<span class="k">done</span>
+</code></pre></div>
+<p>You will then need to set <code>CK8S_CONFIG_PATH</code> to each <code>$CLUSTER-config</code> folder in turn, in order to install Apps on the service cluster and workload clusters.</p>
+<p>With this you should be ready to install Compliant Kubernetes Apps on top of the clusters.
+This will be similar to any other cloud provider.
+Suggested next steps are:</p>
+<ol>
+<li>Configure DNS using your favorite DNS provider.</li>
+<li>Create object storage buckets for backups and container registry storage (if desired).</li>
+<li>Install Compliant Kubernetes Apps!
+   See for example <a href="../exoscale">this guide</a> for more details.</li>
+</ol>
+<h2 id="cleanup">Cleanup</h2>
+<p>If you installed Compliant Kubernetes Apps, start by <a href="../clean-up">cleaning it up</a>.
+Make sure you remove all PersistentVolumes and Services with <code>type=LoadBalancer</code>.
+These objects may create cloud resources that are not managed by Terraform, and therefore would not be removed when we destroy the infrastructure.</p>
+<p>Destroy the infrastructure using Terraform, the same way you created it:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">MODULE_PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">/kubespray/contrib/terraform/openstack&quot;</span>
+
+<span class="nb">pushd</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">MODULE_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">for</span> CLUSTER <span class="k">in</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">SERVICE_CLUSTER</span><span class="si">}</span><span class="s2">&quot;</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">WORKLOAD_CLUSTERS</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span> <span class="k">do</span>
+  terraform init
+  terraform destroy -var-file<span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CK8S_CONFIG_PATH</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">CLUSTER</span><span class="si">}</span><span class="s2">-config/cluster.tfvars&quot;</span> -state<span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CK8S_CONFIG_PATH</span><span class="si">}</span><span class="s2">/</span><span class="si">${</span><span class="nv">CLUSTER</span><span class="si">}</span><span class="s2">-config/terraform.tfstate&quot;</span>
+<span class="k">done</span>
+<span class="nb">popd</span>
+</code></pre></div>
+<p>Don't forget to remove any DNS records and object storage buckets that you may have created.</p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../gcp/" class="md-footer__link md-footer__link--prev" aria-label="Previous: On GCP" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              On GCP
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../ovh-managed-kubernetes/" class="md-footer__link md-footer__link--next" aria-label="Next: On OVH Managed Kubernetes" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              On OVH Managed Kubernetes
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright © 2020 Elastisys AB
+          </div>
+        
+        
+          Made with
+          <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+            Material for MkDocs
+          </a>
+        
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.8397ff9e.min.js", "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.f89c2efe.min.js"></script>
+      
+    
+  </body>
+</html>
